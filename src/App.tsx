@@ -4,6 +4,7 @@ import './App.css';
 
 function App() {
   const videoElement = (document.querySelector(".videoElement") as HTMLVideoElement);
+  const outputImg = document.getElementById('outputImg') as HTMLImageElement;
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [displayConstraints, setDisplayConstraints] = useState('');
   const [photoCapabilities, setPhotoCapabilities] = useState('');
@@ -86,21 +87,32 @@ function App() {
     /**Check for a user camera first */
     let hasCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     setCameraEnabled(hasCamera);
+
+    if (!cameraEnabled) {
+      return;
+    }
     
+    //Get user rear facing camera & stream it to videoElement
     navigator.mediaDevices.getUserMedia(videoConstraints)
       .then((stream) => {
           videoElement.srcObject = stream;
+          //Pass MediaStream Track into ImageCapture API
           let track = stream.getVideoTracks()[0];
-
           let captureDevice = new ImageCapture(track);
+
+          //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
-            captureDevice.takePhoto({fillLightMode: "flash"});
+            captureDevice.takePhoto({fillLightMode: "flash"})
+              .then((blob) => {
+                outputImg.src = URL.createObjectURL(blob);
+            });
             setTakePicture(false);
           }
 
-                  displayTrackCapabilities(track);
-                  facingModeCaps(track);
-                  displayPhotoCapabilities(captureDevice);
+          //Output track/media accessible properties
+          displayTrackCapabilities(track);
+          facingModeCaps(track);
+          displayPhotoCapabilities(captureDevice);
         })
         .catch((err) => {
           console.error(err);
@@ -118,6 +130,8 @@ function App() {
           <button type="button" onClick={takePhoto}>Take Photo</button>
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
+
+      <img id="outputImg" width={videoConstraints.width} height={videoConstraints.height} src='' alt='smile'></img>
 
       <p>Constraints: {displayConstraints}</p>
       <p>Track Caps: <br/>
