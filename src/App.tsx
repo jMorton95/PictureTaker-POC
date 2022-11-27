@@ -9,6 +9,8 @@ function App() {
   const [photoCapabilities, setPhotoCapabilities] = useState('');
   const [trackCapabilities, setTrackCapabilities] = useState('');
   const [facingModeCapas, setFacingModeCapas] = useState('');
+  const [takePicture, setTakePicture] = useState(false);
+
   
   const videoConstraints = { 
     width: 720,
@@ -77,6 +79,16 @@ function App() {
     console.log(devices);
   }
 
+  const takePhoto = () => {
+
+    // navigator.mediaDevices.getUserMedia(videoConstraints).then((stream) => {
+    //   let track = stream.getVideoTracks()[0];
+    //   let captureDevice = new ImageCapture(track);
+    // })
+
+    setTakePicture(true);
+  }
+
   useEffect(() => {
     /**Check for a user camera first */
     let hasCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
@@ -95,7 +107,9 @@ function App() {
           
           let captureDevice = new ImageCapture(track);
 
-          captureDevice.takePhoto({fillLightMode: "flash"});
+          if (takePicture) {
+            captureDevice.takePhoto({fillLightMode: "flash"});
+          }
 
           displayTrackCapabilities(track);
           facingModeCaps(track);
@@ -114,6 +128,7 @@ function App() {
         <button type="button" onClick={getActiveConstraints}>
           Log Active Constraints
           </button>
+          <button type="button" onClick={takePhoto}>Take Photo</button>
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
       <p>Constraints: {displayConstraints}</p>
