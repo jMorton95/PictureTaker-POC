@@ -31,23 +31,23 @@ function App() {
 
   const FlashMode = (() => {
 
-    let fillLightMode: FillLightMode = "off";
+    let flm: FillLightMode = "off";
 
-    const _turnOff = () => { fillLightMode = "off" };
-    const _turnOn = () => { fillLightMode = "flash" };
+    const _turnOff = () => { flm = "off" };
+    const _turnOn = () => { flm = "flash" };
 
     function toggle() {
-      if (fillLightMode === "flash") {
+      if (flm === "flash") {
         _turnOff();
-        console.log(fillLightMode);
-      } else if (fillLightMode === "off") {
+        console.log(flm);
+      } else if (flm === "off") {
         _turnOn();
-        console.log(fillLightMode);
+        console.log(flm);
       }
     }
     //const toggle = () => { (fillLightMode === "flash") ? _turnOff() : _turnOn() };
 
-    return {fillLightMode, toggle}
+    return {flm, toggle}
   })();
 
   const takePhoto = () => {
@@ -135,7 +135,7 @@ function App() {
 
           //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
-            captureDevice.takePhoto({fillLightMode: "flash"})
+            captureDevice.takePhoto({ fillLightMode: "flash" })
             .then((blob) => {
                 outputImg.src = URL.createObjectURL(blob);
             });
