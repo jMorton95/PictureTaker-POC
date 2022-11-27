@@ -54,7 +54,7 @@ function App() {
     let caps = track.getCapabilities();
     let facingMode = caps.facingMode;
 
-    let str = facingMode?.forEach(str => str);
+    let str = facingMode?.join(', ');
   }
   
   
