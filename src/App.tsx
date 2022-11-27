@@ -80,38 +80,27 @@ function App() {
 
   const takePhoto = () => {
     setTakePicture(true);
-    // navigator.mediaDevices.getUserMedia(videoConstraints).then((stream) => {
-    //   let track = stream.getVideoTracks()[0];
-    //   let captureDevice = new ImageCapture(track);
-    // })
   }
 
   useEffect(() => {
     /**Check for a user camera first */
     let hasCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     setCameraEnabled(hasCamera);
-    devicesEnum();
-    
     
     navigator.mediaDevices.getUserMedia(videoConstraints)
       .then((stream) => {
-          let track = stream.getVideoTracks()[0];
-          
-          let caps = track.getCapabilities();
-          console.log(caps);
-
           videoElement.srcObject = stream;
-          
-          let captureDevice = new ImageCapture(track);
+          let track = stream.getVideoTracks()[0];
 
+          let captureDevice = new ImageCapture(track);
           if (takePicture) {
             captureDevice.takePhoto({fillLightMode: "flash"});
             setTakePicture(false);
           }
 
-          displayTrackCapabilities(track);
-          facingModeCaps(track);
-          displayPhotoCapabilities(captureDevice);
+                  displayTrackCapabilities(track);
+                  facingModeCaps(track);
+                  displayPhotoCapabilities(captureDevice);
         })
         .catch((err) => {
           console.error(err);
@@ -129,6 +118,7 @@ function App() {
           <button type="button" onClick={takePhoto}>Take Photo</button>
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
+
       <p>Constraints: {displayConstraints}</p>
       <p>Track Caps: <br/>
          {trackCapabilities}
