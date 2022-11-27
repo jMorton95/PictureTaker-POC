@@ -42,7 +42,7 @@ function App() {
 
     navigator.mediaDevices.getUserMedia(videoConstraints)
       .then((stream) => {
-        let track = stream.getVideoTracks()[1];
+        let track = stream.getVideoTracks()[0];
         track.applyConstraints(videoConstraints);
 
         videoElement.srcObject = stream;
