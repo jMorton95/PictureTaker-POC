@@ -5,10 +5,11 @@ import './App.css';
 function App() {
   const videoElement = (document.querySelector(".videoElement") as HTMLVideoElement);
   const outputImg = document.getElementById('outputImg') as HTMLImageElement;
+  const [cameraEnabled, setCameraEnabled] = useState(false);
   const [takePicture, setTakePicture] = useState(false);
 
   /* Largely irrelevant Dev stuff*/
-  const [cameraEnabled, setCameraEnabled] = useState(false);
+  
   const [displayConstraints, setDisplayConstraints] = useState('');
   const [photoCapabilities, setPhotoCapabilities] = useState('');
   const [trackCapabilities, setTrackCapabilities] = useState('');
@@ -35,7 +36,7 @@ function App() {
     const _turnOff = () => { fillLightMode = "off" };
     const _turnOn = () => { fillLightMode = "flash" };
 
-    const toggle = () => { (fillLightMode === "flash") ? _turnOff : _turnOn };
+    const toggle = () => { (fillLightMode === "flash") ? _turnOff() : _turnOn() };
 
     return {fillLightMode, toggle}
   })();
