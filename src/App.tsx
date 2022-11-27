@@ -15,7 +15,7 @@ function App() {
     height: 480,
     video: true,
     torch: true,
-    facingMode: { exact: "environment" }
+    facingMode: "environment"
   };
   
   const getConstraints = () => {
@@ -109,9 +109,15 @@ function App() {
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
       <p>Constraints: {displayConstraints}</p>
-      <p>Track Caps: {trackCapabilities}</p>
-      <p>PhotoCaps: {photoCapabilities} </p>
-      <p>Facing Modes: {facingModeCapas}</p>
+      <p>Track Caps: <br/>
+         {trackCapabilities}
+         </p>
+      <p>PhotoCaps: <br/>
+         {photoCapabilities}
+      </p>
+      <p>Facing Modes:  <br/>
+        {facingModeCapas}
+      </p>
     </div>
   )
 }
