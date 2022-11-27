@@ -20,10 +20,22 @@ function App() {
       facingMode: {
         exact: "environment"
       }
-    },
-    torch: true,
-    
+    }
   };
+
+  const ChooseFlash = (() => {
+
+    const FlashState = {
+      fillLightMode: 'off'
+    }
+
+    const _setFlashOn = () => FlashState.fillLightMode = "flash";
+    const _setFlashOff = () => FlashState.fillLightMode = 'off';
+
+    const ToggleFlash = () => (FlashState.fillLightMode === "off") ? _setFlashOn() : _setFlashOff;
+    
+    return { FlashState, ToggleFlash };
+  })();
   
   const getConstraints = () => {
     const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
@@ -118,6 +130,7 @@ function App() {
           console.error(err);
         });
 })
+
   return (
     <div className="App">
       <div>
@@ -127,7 +140,10 @@ function App() {
         <button type="button" onClick={getActiveConstraints}>
           Log Active Constraints
           </button>
-          <button type="button" onClick={takePhoto}>Take Photo</button>
+        <button type="button" onClick={takePhoto}>
+          Take Photo
+        </button>
+        <button type='button' onClick={(ChooseFlash.ToggleFlash)}
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
 
