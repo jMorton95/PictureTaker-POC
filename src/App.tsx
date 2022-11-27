@@ -131,7 +131,7 @@ function App() {
             setTakePicture(false);
           }
 
-          //Output track/media accessible properties
+          //DEV Stuff Output track/media accessible properties
           displayTrackCapabilities(track);
           facingModeCaps(track);
           displayPhotoCapabilities(captureDevice);
@@ -153,7 +153,9 @@ function App() {
         <button type="button" onClick={takePhoto}>
           Take Photo
         </button>
-        <button type="button" onClick={FlashMode.toggle}>Toggle Flash</button>
+        <button type="button" onClick={FlashMode.toggle}>
+          Toggle Flash
+          </button>
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
 
