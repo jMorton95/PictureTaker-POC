@@ -36,7 +36,16 @@ function App() {
     const _turnOff = () => { fillLightMode = "off" };
     const _turnOn = () => { fillLightMode = "flash" };
 
-    const toggle = () => { (fillLightMode === "flash") ? _turnOff() : _turnOn() };
+    function toggle() {
+      if (fillLightMode === "flash") {
+        _turnOff();
+        console.log(fillLightMode);
+      } else if (fillLightMode === "off") {
+        _turnOn();
+        console.log(fillLightMode);
+      }
+    }
+    //const toggle = () => { (fillLightMode === "flash") ? _turnOff() : _turnOn() };
 
     return {fillLightMode, toggle}
   })();
