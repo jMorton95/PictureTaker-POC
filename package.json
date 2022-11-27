@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "@types/w3c-image-capture": "^1.0.7",

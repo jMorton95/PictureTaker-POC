@@ -1,28 +1,37 @@
 import { useState, useRef, useEffect } from 'react';
-import reactLogo from './assets/react.svg';
 import './App.css';
 
 
 function App() {
   const videoElement = (document.querySelector(".videoElement") as HTMLVideoElement);
   const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [displayConstraints, setDisplayConstraints] = useState('');
+
   const videoConstraints = { 
-      width: 720,
-      height: 480,
+      // width: 720,
+      // height: 480,
       video: true,
-      audio: true,
-      torch: true
+      torch: true,
+      facingMode: { exact: "environment" }
      };
      
   const getConstraints = () => {
     const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+    let str: string = '';
     for (const constraint of Object.keys(supportedConstraints)) {
+      str += `${constraint}, `;
       console.log(constraint);
     }
+    setDisplayConstraints(str);
   }
 
   const getActiveConstraints = () => {
-    console.log(videoConstraints)
+    let str: string = '';
+    for (const [key, value] of Object.entries(videoConstraints)) {
+      str += `${key}: ${value}, `;
+    }
+    console.log(videoConstraints);
+    setDisplayConstraints(str);
   }
 
 
@@ -33,35 +42,42 @@ function App() {
 
     navigator.mediaDevices.getUserMedia(videoConstraints)
       .then((stream) => {
-        videoElement.srcObject = stream;
-        videoElement.onloadedmetadata = () => {
-          videoElement.play();
-        };
+        let track = stream.getVideoTracks()[0];
+        track.applyConstraints(videoConstraints);
 
-        let [track] = stream.getVideoTracks();
+        videoElement.srcObject = stream;
+        track.applyConstraints(videoConstraints);
+
+        // videoElement.onloadedmetadata = () => {
+        //   videoElement.play();
+        // };
+
+        
+
         let capabilities = track.getCapabilities();
         console.log(capabilities);
         let captureDevice = new ImageCapture(track);
+        
         const photoCapabilities = () =>  captureDevice.getPhotoCapabilities();
         
-        console.log(photoCapabilities);
       })
       .catch((err) => {
         console.error(err);
       });
 })
-
   return (
     <div className="App">
       <div>
-        <button onClick={getConstraints}>
+        <button type="button" onClick={getConstraints}>
           Log Supported Constraints
         </button>
-        <button onClick={getActiveConstraints}>
+        <button type="button" onClick={getActiveConstraints}>
           Log Active Constraints
           </button>
       </div>
-      <video className="videoElement" autoPlay></video>
+      <video className="videoElement" autoPlay muted playsInline></video>
+      <p>Constraints: {displayConstraints}</p>
+      <p></p>
     </div>
   )
 }
