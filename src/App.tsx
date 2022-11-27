@@ -13,9 +13,13 @@ function App() {
   const videoConstraints = { 
     width: 720,
     height: 480,
-    video: true,
+    video: {
+      facingMode: {
+        exact: "environment"
+      }
+    },
     torch: true,
-    facingMode: "environment"
+    
   };
   
   const getConstraints = () => {
@@ -23,7 +27,6 @@ function App() {
     let str: string = '';
     for (const constraint of Object.keys(supportedConstraints)) {
       str += `${constraint}, `;
-      console.log(constraint);
     }
     setDisplayConstraints(str);
   }
@@ -66,14 +69,19 @@ function App() {
     for (let [key, value] of Object.entries(caps)){
       str += `${key}: ${value}, `;
     }
-  
     setPhotoCapabilities(str);
+  }
+
+  const devicesEnum = async () => {
+    let devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices);
   }
 
   useEffect(() => {
     /**Check for a user camera first */
     let hasCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     setCameraEnabled(hasCamera);
+    devicesEnum();
     
     
     navigator.mediaDevices.getUserMedia(videoConstraints)
