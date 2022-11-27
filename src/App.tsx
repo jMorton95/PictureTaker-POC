@@ -140,7 +140,7 @@ function App() {
       <p>PhotoCaps: <br/>
          {photoCapabilities}
       </p>
-      <p>Facing Modes:  <br/>
+      <p>Facing Modes: <br/>
         {facingModeCapas}
       </p>
     </div>
