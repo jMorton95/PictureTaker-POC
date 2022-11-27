@@ -62,7 +62,6 @@ function App() {
     let str = facingMode?.join(', ');
   }
   
-  
   const displayPhotoCapabilities = async (captureDevice: ImageCapture) => {
     let caps = await captureDevice.getPhotoCapabilities();
     console.log(caps);
@@ -80,13 +79,11 @@ function App() {
   }
 
   const takePhoto = () => {
-
+    setTakePicture(true);
     // navigator.mediaDevices.getUserMedia(videoConstraints).then((stream) => {
     //   let track = stream.getVideoTracks()[0];
     //   let captureDevice = new ImageCapture(track);
     // })
-
-    setTakePicture(true);
   }
 
   useEffect(() => {
@@ -109,6 +106,7 @@ function App() {
 
           if (takePicture) {
             captureDevice.takePhoto({fillLightMode: "flash"});
+            setTakePicture(false);
           }
 
           displayTrackCapabilities(track);
