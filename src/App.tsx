@@ -33,7 +33,7 @@ function App() {
     let fillLightMode: FillLightMode = "off";
 
     const _turnOff = () => { fillLightMode = "off" };
-    const _turnOn = () => {fillLightMode = "flash" };
+    const _turnOn = () => { fillLightMode = "flash" };
 
     const toggle = () => { (fillLightMode === "flash") ? _turnOff : _turnOn };
 
@@ -110,9 +110,10 @@ function App() {
     let hasCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     setCameraEnabled(hasCamera);
 
-    if (!cameraEnabled) {
-      return;
-    }
+    // if (!cameraEnabled) {
+    //   return;
+    // }
+
     //ChooseFlash.FlashState.fillLightMode[0]
     //Get user rear facing camera & stream it to videoElement
     navigator.mediaDevices.getUserMedia(videoConstraints)
