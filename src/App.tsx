@@ -5,14 +5,19 @@ import './App.css';
 function App() {
   const videoElement = (document.querySelector(".videoElement") as HTMLVideoElement);
   const outputImg = document.getElementById('outputImg') as HTMLImageElement;
+  const [takePicture, setTakePicture] = useState(false);
+
+  /* Largely irrelevant Dev stuff*/
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [displayConstraints, setDisplayConstraints] = useState('');
   const [photoCapabilities, setPhotoCapabilities] = useState('');
   const [trackCapabilities, setTrackCapabilities] = useState('');
   const [facingModeCapas, setFacingModeCapas] = useState('');
-  const [takePicture, setTakePicture] = useState(false);
+  
+  //const [flashMode, setFlashMode] = useState(false);
 
   
+  //Settings for video & picture modes
   const videoConstraints = { 
     width: 720,
     height: 480,
@@ -23,20 +28,25 @@ function App() {
     }
   };
 
-  const ChooseFlash = (() => {
+  const FlashMode = (() => {
 
-    const FlashState = {
-      fillLightMode: 'off'
-    }
+    let fillLightMode: FillLightMode = "off";
 
-    const _setFlashOn = () => FlashState.fillLightMode = "flash";
-    const _setFlashOff = () => FlashState.fillLightMode = 'off';
+    const _turnOff = () => { fillLightMode = "off" };
+    const _turnOn = () => {fillLightMode = "flash" };
 
-    const ToggleFlash = () => (FlashState.fillLightMode === "off") ? _setFlashOn() : _setFlashOff;
-    
-    return { FlashState, ToggleFlash };
+    const toggle = () => { (fillLightMode === "flash") ? _turnOff : _turnOn };
+
+    return {fillLightMode, toggle}
   })();
-  
+
+  const takePhoto = () => {
+    setTakePicture(true);
+  }
+
+
+  //Irrelevant stuff while Developing
+  //const toggleFlash = () => { (flashMode) ? setFlashMode(false) : setFlashMode(true) };
   const getConstraints = () => {
     const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
     let str: string = '';
@@ -91,9 +101,9 @@ function App() {
     console.log(devices);
   }
 
-  const takePhoto = () => {
-    setTakePicture(true);
-  }
+  
+
+  //Meat of the Component
 
   useEffect(() => {
     /**Check for a user camera first */
@@ -103,7 +113,7 @@ function App() {
     if (!cameraEnabled) {
       return;
     }
-    
+    //ChooseFlash.FlashState.fillLightMode[0]
     //Get user rear facing camera & stream it to videoElement
     navigator.mediaDevices.getUserMedia(videoConstraints)
       .then((stream) => {
@@ -114,8 +124,8 @@ function App() {
 
           //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
-            captureDevice.takePhoto({fillLightMode: "flash"})
-              .then((blob) => {
+            captureDevice.takePhoto({fillLightMode: FlashMode.fillLightMode})
+            .then((blob) => {
                 outputImg.src = URL.createObjectURL(blob);
             });
             setTakePicture(false);
@@ -143,7 +153,7 @@ function App() {
         <button type="button" onClick={takePhoto}>
           Take Photo
         </button>
-        <button type='button' onClick={(ChooseFlash.ToggleFlash)}
+        <button type="button" onClick={FlashMode.toggle}>Toggle Flash</button>
       </div>
       <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
 
