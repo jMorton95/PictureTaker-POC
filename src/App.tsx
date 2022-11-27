@@ -88,15 +88,15 @@ function App() {
       .then((stream) => {
           let track = stream.getVideoTracks()[0];
           
-        let caps = track.getCapabilities();
-        console.log(caps);
+          let caps = track.getCapabilities();
+          console.log(caps);
 
           videoElement.srcObject = stream;
           
           let captureDevice = new ImageCapture(track);
 
-          const getEm = () => captureDevice.getPhotoCapabilities();
-          console.log(getEm());
+          captureDevice.takePhoto({fillLightMode: "flash"});
+
           displayTrackCapabilities(track);
           facingModeCaps(track);
           displayPhotoCapabilities(captureDevice);
