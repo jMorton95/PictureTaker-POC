@@ -135,7 +135,7 @@ function App() {
 
           //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
-            captureDevice.takePhoto({ fillLightMode: FlashMode.flm })
+            captureDevice.takePhoto({ fillLightMode: "flash" })
             .then((blob) => {
                 outputImg.src = URL.createObjectURL(blob);
             });
