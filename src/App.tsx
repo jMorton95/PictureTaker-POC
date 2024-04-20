@@ -14,36 +14,37 @@ function App() {
   const [photoCapabilities, setPhotoCapabilities] = useState('');
   const [trackCapabilities, setTrackCapabilities] = useState('');
   const [facingModeCapas, setFacingModeCapas] = useState('');
+  const [deviceId, setDeviceId] = useState('');
+  const [torchMode, setTorchMode] = useState(false);
   
   //const [flashMode, setFlashMode] = useState(false);
+  const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
+  if (SUPPORTS_MEDIA_DEVICES) {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      const cameras = devices.filter((device) => device.kind === 'videoinput');
 
- 
-  const data = async () => {
-    let boom;
-    let res = await fetch("https//localhost:7011/test", {
-      method: "GET",
-      headers : {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }).then(res => {
-      boom = res.json();
-    }) 
-    return boom;
-  } 
-  //data();
-  console.log(data());
-  
+      if (cameras.length === 0) {
+        throw 'No camera found on this device.';
+      }
+
+      setDeviceId(cameras[cameras.length - 1].deviceId);
+    })
+  }
   //Settings for video & picture modes
   const videoConstraints = { 
     video: {
+      deviceId: deviceId,
       facingMode: {
         exact: "environment"
         },
       width: {ideal: 720},
       height: {ideal: 480},
+        exact: ['user', 'environment'],
+      }
     }
   };
+
+  const toggleTorch = () => setTorchMode(!torchMode);
 
   const FlashMode = (() => {
 
@@ -157,10 +158,12 @@ function App() {
           let track = stream.getVideoTracks()[0];
           let captureDevice = new ImageCapture(track);
 
-          track.applyConstraints({
-            advanced: [{torch: true}]
-          });
-
+            track.applyConstraints({
+              advanced: [{
+                torch: torchMode
+              }]
+            });
+          
           //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
             captureDevice.takePhoto({ fillLightMode: "flash" })
@@ -193,7 +196,7 @@ function App() {
         <button type="button" onClick={takePhoto}>
           Take Photo
         </button>
-        <button type="button" onClick={FlashMode.toggle}>
+        <button type="button" onClick={toggleTorch}>
           Toggle Flash
           </button>
       </div>
