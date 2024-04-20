@@ -159,15 +159,19 @@ function App() {
       .then((stream) => {
         videoElement.srcObject = stream;
         //Pass MediaStream Track into ImageCapture API
+        const tracks = stream.getVideoTracks();
         let track = stream.getVideoTracks()[0];
         let captureDevice = new ImageCapture(track);
 
-        track.applyConstraints({
-          advanced: [
-            {
-              torch: torchMode,
-            },
-          ],
+        tracks.forEach((t) => {
+          t.applyConstraints({
+            advanced: [
+              {
+                torch: torchMode,
+              },
+            ],
+            torch: torchMode,
+          });
         });
 
         //checks for State (set by take photo button) to utilise API to take photo
