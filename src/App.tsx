@@ -17,15 +17,31 @@ function App() {
   
   //const [flashMode, setFlashMode] = useState(false);
 
+ 
+  const data = async () => {
+    let boom;
+    let res = await fetch("https//localhost:7011/test", {
+      method: "GET",
+      headers : {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(res => {
+      boom = res.json();
+    }) 
+    return boom;
+  } 
+  //data();
+  console.log(data());
   
   //Settings for video & picture modes
   const videoConstraints = { 
-    width: 720,
-    height: 480,
     video: {
       facingMode: {
         exact: "environment"
-      }
+        },
+      width: {ideal: 720},
+      height: {ideal: 480},
     }
   };
 
@@ -106,11 +122,19 @@ function App() {
     setPhotoCapabilities(str);
   }
 
-  const devicesEnum = async () => {
-    let devices = await navigator.mediaDevices.enumerateDevices();
-    console.log(devices);
+  const devicesEnum = () => {
+    let camera: any;
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      const cameras = devices.filter((device) => device.kind === 'videoinput');
+      //console.log(cameras[0])
+      camera = cameras[cameras.length - 1];
+    })
+    return camera ?? null;
   }
 
+  const camera:any = devicesEnum();
+
+  console.log(camera);
   
 
   //Meat of the Component
@@ -133,6 +157,10 @@ function App() {
           let track = stream.getVideoTracks()[0];
           let captureDevice = new ImageCapture(track);
 
+          track.applyConstraints({
+            advanced: [{torch: true}]
+          });
+
           //checks for State (set by take photo button) to utilise API to take photo
           if (takePicture) {
             captureDevice.takePhoto({ fillLightMode: "flash" })
@@ -150,6 +178,7 @@ function App() {
         .catch((err) => {
           console.error(err);
         });
+      
 })
 
   return (
@@ -168,9 +197,9 @@ function App() {
           Toggle Flash
           </button>
       </div>
-      <video width={videoConstraints.width} height={videoConstraints.height} className="videoElement" autoPlay muted playsInline></video>
+      <video width={videoConstraints.video.width.ideal} height={videoConstraints.video.height.ideal} className="videoElement" autoPlay muted playsInline></video>
 
-      <img id="outputImg" width={videoConstraints.width} height={videoConstraints.height} src='' alt='smile'></img>
+      <img id="outputImg" width={videoConstraints.video.width.ideal} height={videoConstraints.video.height.ideal} src='' alt='smile'></img>
 
       <p>Constraints: {displayConstraints}</p>
       <p>Track Caps: <br/>
